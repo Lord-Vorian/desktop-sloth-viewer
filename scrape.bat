@@ -1,1 +1,1 @@
-node github-contributions-scraper\index.js lord-vorian contributions.json
+node github-contributions-scraper\index.js satetheus contributions.json

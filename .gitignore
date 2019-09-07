@@ -1,0 +1,7 @@
+*.json
+*.idea
+*.pyc
+__pycache__
+*.bat
+!scrape.bat
+*temp

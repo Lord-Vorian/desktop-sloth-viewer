@@ -1,0 +1,3 @@
+[submodule "github-contributions-scraper"]
+	path = github-contributions-scraper
+	url = https://github.com/Lord-Vorian/github-contributions-scraper.git

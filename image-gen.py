@@ -8,6 +8,7 @@ lord-vorian 9/7/2019
 
 import json
 from subprocess import call
+from PIL import Image
 
 window_length = 256  # days
 goal = 2  # daily goal for contributions. Big effect on image generated
@@ -25,6 +26,8 @@ with open('contributions.json') as source:
     rel_contributions = all_contributions[-1:0-window_length-1:-1]  # step backward from most recent
     print('.json file parsed...')
 
-
+image1 = Image.open('img\image1.jpg')
+width, height = image1.size
+print(width/window_length)
 
 

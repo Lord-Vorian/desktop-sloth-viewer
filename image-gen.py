@@ -68,9 +68,9 @@ for i in range(0, window_length):
     # set the height of the bar to the average percent of goal over number of days in the window
     if cut_height < 1:  # ignore bars that need not be cut
         for line in range(column_ranges[i][0]-1,column_ranges[i][1]):
-            print(line)
             for pixel in range(0, int(height * (1-cut_height))):
-                px_edit[line, pixel] = (0, 0, 0)
+                greyscale = int(sum(px_edit[line, pixel]) / 3)  #TODO make this junk readable
+                px_edit[line, pixel] = (int(greyscale/3),30,int(greyscale/3))
 
 image1.show()
 image1.save('temp.png','PNG')

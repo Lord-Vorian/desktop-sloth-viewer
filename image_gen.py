@@ -15,10 +15,18 @@ from PIL import Image
 window_length = 256  # Days
 goal = 2  # Daily goal for contributions. Big effect on image generated
 average_window = 7  # Days
-user = 'lord-vorian'
+user = 'satetheus'
 
-run('node {} {} contributions.json'.format(
-    path.join('github-contributions-scraper', 'index.js'), user))
+path_dict = {"here": path.dirname(__file__)}
+path_dict.update([
+    ("scraper", path.join(path_dict['here'], 'github-contributions-scraper', 'index.js')),
+    ("data", path.join(path_dict['here'], 'contributions.json')),
+    ("image dir", path.join(path_dict['here'], 'img')),
+    ("save as", path.join(path_dict['here'], 'result.bmp')),
+    ("update", path.join(path_dict['here'], 'Update_desk.bat')),
+])
+
+run('node {} {} {}'.format( path_dict['scraper'], user, path_dict['data']))
 # call the scraper submod
 
 
@@ -34,7 +42,7 @@ def filtered(image, x, y):
 
 
 rel_contributions = []  # rel = relevant
-with open('contributions.json') as source:
+with open(path_dict['data']) as source:
     all_contributions = jsonload(source)
 
     if len(all_contributions) < window_length:
@@ -44,7 +52,7 @@ with open('contributions.json') as source:
     rel_contributions.reverse()  # To return the list to its original order
     print('.json file parsed...')
 
-image1 = Image.open(path.join('img', 'image1.jpg'))  # TODO make this file-type agnostic
+image1 = Image.open(path.join(path_dict['image dir'], 'image1.jpg'))  # TODO make this file-type agnostic
 width, height = image1.size
 
 column_ranges = []  # A set of pixel locations in x to be used as bars in the chart
@@ -86,6 +94,6 @@ for i in range(0, window_length):
             for pixel in range(0, int(height * (1-cut_height))):
                 filtered(image1, line, pixel)
 
-
-image1.save('result.bmp', 'BMP')
-call('Update_desk.bat')
+image1.show()
+image1.save(path_dict['save as'], 'BMP')
+call(path_dict['update'])

@@ -9,13 +9,13 @@ lord-vorian 9/7/2019
 
 from json import load as jsonload
 from os import path
-from subprocess import run
+from subprocess import run, call
 from PIL import Image
 
 window_length = 256  # Days
-goal = 4  # Daily goal for contributions. Big effect on image generated
+goal = 2  # Daily goal for contributions. Big effect on image generated
 average_window = 7  # Days
-user = 'satetheus'
+user = 'lord-vorian'
 
 run('node {} {} contributions.json'.format(
     path.join('github-contributions-scraper', 'index.js'), user))
@@ -86,5 +86,6 @@ for i in range(0, window_length):
             for pixel in range(0, int(height * (1-cut_height))):
                 filtered(image1, line, pixel)
 
-image1.show()
-image1.save('temp.png', 'PNG')
+
+image1.save('result.bmp', 'BMP')
+call('Update_desk.bat')

@@ -4,6 +4,8 @@
 __pycache__
 *.bat
 !scrape.bat
+!Update_desk.bat
 *temp
 *.jpg
 *.png
+*.bmp

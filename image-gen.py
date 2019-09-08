@@ -12,10 +12,11 @@ from subprocess import call
 from PIL import Image
 
 window_length = 256  # days
-goal = 5  # daily goal for contributions. Big effect on image generated
+goal = 2  # daily goal for contributions. Big effect on image generated
+average_window = 7  # days
 rel_contributions = []  # rel = relevant
 
-#call([r'scrape.bat'])  # this .bat uses the submodded scraper to output "contributions.json'
+call([r'scrape.bat'])  # this .bat uses the submodded scraper to output "contributions.json'
 # TODO make a version of this .bat to be called on Linux
 
 with open('contributions.json') as source:
@@ -25,6 +26,7 @@ with open('contributions.json') as source:
         window_length = len(all_contributions)  # just in case contributions are fewer than 256
 
     rel_contributions = all_contributions[-1:0-window_length-1:-1]  # step backward from most recent
+    rel_contributions.reverse()  # to return the list to its original order
     print('.json file parsed...')
 
 image1 = Image.open('img\image1.jpg')  # TODO make this file-type agnostic
@@ -56,15 +58,19 @@ for column in range(0,len(column_ranges)):
 # Now we edit image1 one pixel at a time . . . .
 
 px_edit = image1.load()  # enables pixel editing with the PixelAccess class
+rolling_avg = [rel_contributions[0]['count']] * average_window
 
 for i in range(0, window_length):
-    cut_height = rel_contributions[i]["count"]/goal
-    # find percentage of goal achieved TODO make this a rolling 7-day average to smooth results.
+    today_count = rel_contributions[i]["count"]
+    rolling_avg.append(today_count)
+    rolling_avg.pop(0)
+    cut_height = (sum(rolling_avg)/len(rolling_avg))/ goal
+    # set the height of the bar to the average percent of goal over number of days in the window
     if cut_height < 1:  # ignore bars that need not be cut
-        for line in range(column_ranges[i][0],column_ranges[i][1]):
+        for line in range(column_ranges[i][0]-1,column_ranges[i][1]):
+            print(line)
             for pixel in range(0, int(height * (1-cut_height))):
-                #assert (line in range(0,width) and pixel in range(0,height)), "bar {}\n"
-                px_edit[line,pixel] = (0,0,0)
+                px_edit[line, pixel] = (0, 0, 0)
 
 image1.show()
 

@@ -1,2 +1,2 @@
-# desktop-sloth-viewer
-Tracks git contributions vs game time. Updates desktop background with current status.
+# Desktop Sloth Viewer
+Scrapes github's contribution chart and uses it to edit your desktop background. For use as a motivation to contribute more. Not ready yet.

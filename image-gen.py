@@ -73,6 +73,7 @@ for i in range(0, window_length):
                 px_edit[line, pixel] = (0, 0, 0)
 
 image1.show()
+image1.save('temp.png','PNG')
 
 
 

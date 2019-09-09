@@ -1,5 +1,5 @@
 # Desktop Sloth Viewer
-Scrapes github's contribution chart and uses it to edit your desktop background. For use as a motivation to contribute more. Enabled by [Don McCurdy's Contributions Scraper](https://github.com/donmccurdy/github-contributions-scraper)
+Scrapes github's contribution chart and uses it to turn your backround into a bar-graph of the last 256 days. For use as a motivation to contribute more. Enabled by [Don McCurdy's Contributions Scraper](https://github.com/donmccurdy/github-contributions-scraper)
 
 
 ### Currently, this

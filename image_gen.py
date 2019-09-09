@@ -52,7 +52,7 @@ def filtered(image, x, y):
 
     px_edit[x, y] = (R,G,B)
     # This replaces the pixel. Play with this until you like the filter. TODO make dict of filters
-    # Be warned: anything done in this func will have a big impact on processing speed
+    # Be warned: anything done in this func will have a big impact on processing speed TODO add this to docstring
 
 
 rel_contributions = []  # rel = relevant

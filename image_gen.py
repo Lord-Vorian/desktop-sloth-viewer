@@ -9,16 +9,17 @@ lord-vorian 9/7/2019
 
 import ctypes
 from json import load as jsonload
-from os import path, getcwd
+from os import path
 from subprocess import run
 from PIL import Image
 
 window_length = 256  # Days
 goal = 2  # Daily goal for contributions. Big effect on image generated
 average_window = 7  # Days
-user = 'satetheus'
+user = 'lord-vorian'
 
-path_dict = {"here": getcwd()}
+path_dict = {"here": path.dirname(path.abspath(__file__))}
+print('starting from {}'.format(path_dict["here"]))
 path_dict.update([
     ("scraper", path.join(path_dict['here'], 'github-contributions-scraper', 'index.js')),
     ("data", path.join(path_dict['here'], 'contributions.json')),
@@ -37,7 +38,7 @@ def filtered(image, x, y):
     # Enables pixel editing with the PixelAccess class
     greyscale = int(sum(px_edit[x, y]) / 3)
     # Average the RGB values to come up with the grey scale. int() to avoid float
-    px_edit[x, y] = (int(greyscale / 3), 20, int(greyscale/1.5))
+    px_edit[x, y] = (int(30,greyscale/8),int(greyscale/5))
     # This replaces the pixel. Play with this until you like the filter. TODO make dict of filters
     # Be warned: anything done in this func will have a big impact on processing speed
 
@@ -95,7 +96,7 @@ for i in range(0, window_length):
             for pixel in range(0, int(height * (1-cut_height))):
                 filtered(image1, line, pixel)
 
-image1.show()
+
 image1.save(path_dict['save as'], 'BMP')
 ctypes.windll.user32.SystemParametersInfoW(20, 0, path_dict['save as'], 3)  # Updates the desktop image
 # TODO make os independent

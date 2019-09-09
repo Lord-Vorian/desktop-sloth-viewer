@@ -3,8 +3,7 @@
 *.pyc
 __pycache__
 *.bat
-!scrape.bat
-!Update_desk.bat
+!activate.bat
 *temp
 *.jpg
 *.png

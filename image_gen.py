@@ -40,7 +40,7 @@ def filtered(image, x, y):
     # Average the RGB values to come up with the grey scale. int() to avoid float
     px_edit[x, y] = (int(30,greyscale/8),int(greyscale/5))
     # This replaces the pixel. Play with this until you like the filter. TODO make dict of filters
-    # Be warned: anything done in this func will have a big impact on processing speed
+    # Be warned: anything done in this func will have a big impact on processing speed TODO add this to docstring
 
 
 rel_contributions = []  # rel = relevant

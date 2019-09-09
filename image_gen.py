@@ -7,9 +7,10 @@ lord-vorian 9/7/2019
 """
 # TODO Write a better docstring^^ (PEP 257)
 
+import ctypes
 from json import load as jsonload
-from os import path
-from subprocess import run, call
+from os import path, getcwd
+from subprocess import run
 from PIL import Image
 
 window_length = 256  # Days
@@ -17,7 +18,7 @@ goal = 2  # Daily goal for contributions. Big effect on image generated
 average_window = 7  # Days
 user = 'satetheus'
 
-path_dict = {"here": path.dirname(__file__)}
+path_dict = {"here": getcwd()}
 path_dict.update([
     ("scraper", path.join(path_dict['here'], 'github-contributions-scraper', 'index.js')),
     ("data", path.join(path_dict['here'], 'contributions.json')),
@@ -36,7 +37,7 @@ def filtered(image, x, y):
     # Enables pixel editing with the PixelAccess class
     greyscale = int(sum(px_edit[x, y]) / 3)
     # Average the RGB values to come up with the grey scale. int() to avoid float
-    px_edit[x, y] = (int(greyscale / 3), 30, int(greyscale / 3))
+    px_edit[x, y] = (int(greyscale / 3), 20, int(greyscale/1.5))
     # This replaces the pixel. Play with this until you like the filter. TODO make dict of filters
     # Be warned: anything done in this func will have a big impact on processing speed
 
@@ -96,4 +97,5 @@ for i in range(0, window_length):
 
 image1.show()
 image1.save(path_dict['save as'], 'BMP')
-call(path_dict['update'])
+ctypes.windll.user32.SystemParametersInfoW(20, 0, path_dict['save as'], 3)  # Updates the desktop image
+# TODO make os independent

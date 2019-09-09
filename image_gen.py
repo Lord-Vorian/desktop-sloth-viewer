@@ -8,7 +8,7 @@ lord-vorian 9/7/2019
 # TODO Write a better docstring^^ (PEP 257)
 
 import ctypes
-from random import random
+from random import random,choice
 from json import load as jsonload
 from os import path
 from subprocess import run
@@ -33,15 +33,24 @@ path_dict.update([
 run('node {} {} {}'.format( path_dict['scraper'], user, path_dict['data']))
 # call the scraper submod
 
-
-fmod = random()
+pick = [1500,1000,500,250]
+fmod = choice([0,1])
+fmod2 = choice(pick)
+fmod3 = choice(pick)
+fmod4 = choice(pick)
 def filtered(image, x, y):
     """Use PIL's PixelAccess class to edit an individual pixel on the given image object"""
+    xy =[x,y]
     px_edit = image.load()
     # Enables pixel editing with the PixelAccess class
     greyscale = int(sum(px_edit[x, y]) / 3)
     # Average the RGB values to come up with the grey scale. int() to avoid float
-    px_edit[x, y] = (int(greyscale*fmod*.8),int(greyscale/8),int(greyscale*fmod*.5))
+
+    R = int(greyscale / (x/fmod2+1))
+    G = int(greyscale / (xy[fmod]/fmod3+1))
+    B = int(greyscale / (xy[fmod]/fmod4+1))
+
+    px_edit[x, y] = (R,G,B)
     # This replaces the pixel. Play with this until you like the filter. TODO make dict of filters
     # Be warned: anything done in this func will have a big impact on processing speed
 

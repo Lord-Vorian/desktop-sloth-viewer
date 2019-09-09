@@ -8,15 +8,17 @@ lord-vorian 9/7/2019
 # TODO Write a better docstring^^ (PEP 257)
 
 import ctypes
+from random import random
 from json import load as jsonload
 from os import path
 from subprocess import run
 from PIL import Image
 
-window_length = 256  # Days
+window_length = 66  # Days
 goal = 2  # Daily goal for contributions. Big effect on image generated
 average_window = 7  # Days
 user = 'lord-vorian'
+
 
 path_dict = {"here": path.dirname(path.abspath(__file__))}
 print('starting from {}'.format(path_dict["here"]))
@@ -32,13 +34,14 @@ run('node {} {} {}'.format( path_dict['scraper'], user, path_dict['data']))
 # call the scraper submod
 
 
+fmod = random()
 def filtered(image, x, y):
     """Use PIL's PixelAccess class to edit an individual pixel on the given image object"""
     px_edit = image.load()
     # Enables pixel editing with the PixelAccess class
     greyscale = int(sum(px_edit[x, y]) / 3)
     # Average the RGB values to come up with the grey scale. int() to avoid float
-    px_edit[x, y] = (int(30,greyscale/8),int(greyscale/5))
+    px_edit[x, y] = (int(greyscale*fmod*.8),int(greyscale/8),int(greyscale*fmod*.5))
     # This replaces the pixel. Play with this until you like the filter. TODO make dict of filters
     # Be warned: anything done in this func will have a big impact on processing speed
 

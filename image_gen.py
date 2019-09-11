@@ -13,6 +13,7 @@ from json import load as jsonload
 from os import path
 from subprocess import run
 from PIL import Image
+from time import time
 
 window_length = 66  # Days
 goal = 2  # Daily goal for contributions. Big effect on image generated
@@ -47,7 +48,7 @@ def filtered(image, x, y):
     # Average the RGB values to come up with the grey scale. int() to avoid float
 
     R = int(greyscale / (x/fmod2+1))
-    G = int(greyscale / (xy[fmod]/fmod3+1))
+    G = int(greyscale / (xy[y%2]/fmod3+1))
     B = int(greyscale / (xy[fmod]/fmod4+1))
 
     px_edit[x, y] = (R,G,B)

@@ -112,8 +112,55 @@ class SlothChart:
         # TODO make os independent ^^
         return self.image1
 
+    def line_chart_overlay(self):
+        self.image1_edit = self.get_image().load()
+        width, height = self.image1.size
+        self.get_contributions()
+
+        step_width = width // self.window
+        rolling_avg = [self.contributions[0]['count']] * self.average_window
+        xy_list = [[0,int(height * (sum(rolling_avg) / len(rolling_avg)) / self.goal)]]
+        pixel_position = 0
+        for day in range(self.window):
+            today_count = self.contributions[day]['count']
+            rolling_avg.append(today_count)
+            rolling_avg.pop(0)
+            if day < width % self.window:
+                xy_list.append([pixel_position + step_width + 1])
+            else:
+                xy_list.append([pixel_position + step_width])
+            pixel_position = xy_list[-1][0]
+            xy_list[-1].append(int(height * (sum(rolling_avg) / len(rolling_avg)) / self.goal))
+
+        for x in range(width):
+            cut_height = 'err'
+            for pair in range(len(xy_list)):
+                if x == xy_list[pair][0]:
+                    cut_height = xy_list[pair][1]
+
+                elif x > xy_list[pair][0]:
+                    x1,y1 = xy_list[pair]
+                    x2,y2 = xy_list[pair+1]
+                    slope = (y2-y1)/(x2-x1)
+                    offset = -(slope*x1 - y1)
+                    cut_height = int(x*slope + offset)
+
+            if cut_height < height:
+                for y in range(height-cut_height):
+                    self.filtered(self.image1_edit, x, y)
+
+        self.image1.save(self.save_as, 'BMP')
+        ctypes.windll.user32.SystemParametersInfoW(20, 0, self.save_as, 3)
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
-    background_chart = SlothChart('lord-vorian', 66)
-    background_chart.bar_chart_overlay()
+    background_chart = SlothChart('satetheus', 256, 4, 30)
+    background_chart.line_chart_overlay()
 

@@ -138,15 +138,15 @@ class SlothChart:
                 if x == xy_list[pair][0]:
                     cut_height = xy_list[pair][1]
 
+                elif x > xy_list[pair][0]:
+                    x1,y1 = xy_list[pair]
+                    x2,y2 = xy_list[pair+1]
+                    slope = (y2-y1)/(x2-x1)
+                    offset = -(slope*x1 - y1)
+                    cut_height = int(x*slope + offset)
 
-                elif x > xy_list[pair][0] and x < xy_list[pair + 1][0]:
-                    slope = (xy_list[pair+1][1] - xy_list[pair][1]) / (xy_list[pair+1][0] - xy_list[pair][0])
-                    cut_height = int(x*slope+xy_list[pair][1])
-
-
-            if cut_height < (height-1):
+            if cut_height < height:
                 for y in range(height-cut_height):
-                    print(x,y)
                     self.filtered(self.image1_edit, x, y)
 
         self.image1.save(self.save_as, 'BMP')
@@ -161,6 +161,6 @@ class SlothChart:
 
 
 if __name__ == "__main__":
-    background_chart = SlothChart('satetheus')
+    background_chart = SlothChart('satetheus', 256, 4, 30)
     background_chart.line_chart_overlay()
 

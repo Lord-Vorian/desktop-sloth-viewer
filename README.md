@@ -6,4 +6,4 @@ Scrapes github's contribution chart and uses it to turn your backround into a li
 ![temp](https://user-images.githubusercontent.com/37329722/64482001-ffa01100-d1a5-11e9-84f1-b908ab04af5e.PNG)
 
 ### Looks like this:
-![temp](https://user-images.githubusercontent.com/37329722/64833690-1bd3f180-d59c-11e9-9ab3-167d1afc3e77.png)
+![temp](https://user-images.githubusercontent.com/37329722/64834897-23e26000-d5a1-11e9-9bff-44e8b532519e.png)

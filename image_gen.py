@@ -8,7 +8,7 @@ lord-vorian 9/7/2019
 # TODO Write a better docstring^^ (PEP 257)
 
 import ctypes
-from random import sample
+from random import sample, randrange
 from json import load as jsonload
 from os import path
 from subprocess import run
@@ -39,7 +39,7 @@ class SlothChart:
     def filtered(self, editor, x, y):
         """Use PIL's PixelAccess class to edit an individual pixel on the given image object"""
         xy = [x,y]
-        greyscale = int(sum(editor[x, y]) / 3)
+        greyscale = int((sum(editor[x, y]) / 2) * (1 - y / self.image1.size[1]))
         # Average the RGB values to come up with the grey scale. int() to avoid float
 
         R = int(greyscale / (xy[(self.gradients[0] % 2)] / self.gradients[0]+1))  # +1 to avoid division by zero
@@ -161,6 +161,6 @@ class SlothChart:
 
 
 if __name__ == "__main__":
-    background_chart = SlothChart('satetheus', 256, 4, 30)
+    background_chart = SlothChart('lord-vorian', 255, 2, 7)
     background_chart.line_chart_overlay()
 

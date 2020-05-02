@@ -9,3 +9,4 @@ __pycache__
 !sample.jpg
 *.png
 *.bmp
+sloth_env/

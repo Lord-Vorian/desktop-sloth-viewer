@@ -8,6 +8,7 @@ lord-vorian 9/7/2019
 # TODO Write a better docstring^^ (PEP 257)
 
 import ctypes
+from time import time
 from random import sample, randrange
 from json import load as jsonload
 from os import path
@@ -38,7 +39,7 @@ class SlothChart:
 
     def filtered(self, editor, x, y):
         """Use PIL's PixelAccess class to edit an individual pixel on the given image object"""
-        xy = [x,y]
+        xy = [x, y]
         greyscale = int((sum(editor[x, y]) / 2) * (1 - y / self.image1.size[1]))
         # Average the RGB values to come up with the grey scale. int() to avoid float
 
@@ -51,7 +52,7 @@ class SlothChart:
         # Be warned: anything done in this func will have a big impact on processing speed TODO add this to docstring
 
     def get_contributions(self):
-        run('node {} {} {}'.format( self.scraper, self.user, self.data))  # call the scraper submod
+        run('node {} {} {}'.format(self.scraper, self.user, self.data))  # call the scraper submod
         with open(self.data) as source:
             all_contributions = jsonload(source)
             if len(all_contributions) < self.window:
@@ -149,6 +150,7 @@ class SlothChart:
                 for y in range(height-cut_height):
                     self.filtered(self.image1_edit, x, y)
 
+
         self.image1.save(self.save_as, 'BMP')
         ctypes.windll.user32.SystemParametersInfoW(20, 0, self.save_as, 3)
 
@@ -161,6 +163,7 @@ class SlothChart:
 
 
 if __name__ == "__main__":
+    start = time()
     background_chart = SlothChart('lord-vorian', 255, 2, 7)
     background_chart.line_chart_overlay()
-
+    print(time()-start, "seconds")

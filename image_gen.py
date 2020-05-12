@@ -150,6 +150,10 @@ class SlothChart:
                 for y in range(height-cut_height):
                     self.filtered(self.image1_edit, x, y)
 
+    def line_chart_numpy(self):
+        pass
+
+
 
         self.image1.save(self.save_as, 'BMP')
         ctypes.windll.user32.SystemParametersInfoW(20, 0, self.save_as, 3)

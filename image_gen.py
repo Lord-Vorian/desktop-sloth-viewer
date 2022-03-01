@@ -20,7 +20,7 @@ class SlothChart:
     def __init__(self, user, window=256, goal=2, average_window=7):
         self.user = user
         self.goal = goal
-        self.average_window = average_window
+        self.average_window = average_window  # for calculating a rolling average
         self.window = window  # Both in days
         self.contributions = []
         self.gradients = sample(range(250, 1500), 3)  # effects length of color gradient across the image.
@@ -31,8 +31,8 @@ class SlothChart:
         self.local_path = path.dirname(path.abspath(__file__))
         self.scraper = path.join(self.local_path, 'github-contributions-scraper', 'index.js')
         self.data = path.join(self.local_path, 'contributions.json')
-        self.image_dir = path.join(self.local_path, 'img')
-        self.save_as = path.join(self.local_path, 'result.bmp')
+        self.image_dir = path.join(self.local_path, 'pics')
+        self.save_as = path.join(self.local_path,'pics', 'result.bmp')
         self.update = path.join(self.local_path, 'Update_desk.bat')
         print('starting from {}'.format(self.local_path,))
 
@@ -71,8 +71,6 @@ class SlothChart:
         width, height = self.image1.size
         column_ranges = []  # A set of pixel locations in x to be used as bars in the chart
         column_width = width//self.window  # Number of pixels in each column
-
-        # TODO generate a line instead of a bar chart (looks better)
 
         for column in range(self.window):  # Give each column a single value: its width
             if column <= width % self.window:
@@ -161,6 +159,6 @@ class SlothChart:
 
 
 if __name__ == "__main__":
-    background_chart = SlothChart('satetheus', 256, 4, 30)
+    background_chart = SlothChart('lord_vorian', 256, 4, 30)
     background_chart.line_chart_overlay()
 

@@ -8,21 +8,24 @@ lord-vorian 9/7/2019
 # TODO Write a better docstring^^ (PEP 257)
 
 import ctypes
-from random import sample
-from json import load as jsonload
-from os import path
-from subprocess import run
+from random import sample, choice
+from os import path, getlogin, listdir
+from os import name as os_name
 from PIL import Image
+import requests
+from bs4 import BeautifulSoup
 
 
 class SlothChart:
 
     def __init__(self, user, window=256, goal=2, average_window=7):
         self.user = user
+        self.osUser = getlogin()
         self.goal = goal
         self.average_window = average_window  # for calculating a rolling average
         self.window = window  # Both in days
         self.contributions = []
+        self.minimum_resolution = 720
         self.gradients = sample(range(250, 1500), 3)  # effects length of color gradient across the image.
         self.image1 = None
         self.image1_edit = None
@@ -30,8 +33,7 @@ class SlothChart:
         # Set up file locations
         self.local_path = path.dirname(path.abspath(__file__))
         self.scraper = path.join(self.local_path, 'github-contributions-scraper', 'index.js')
-        self.data = path.join(self.local_path, 'contributions.json')
-        self.image_dir = path.join(self.local_path, 'pics')
+        self.image_dir = path.join(self.local_path, 'pics', 'favorites')
         self.save_as = path.join(self.local_path,'pics', 'result.bmp')
         self.update = path.join(self.local_path, 'Update_desk.bat')
         print('starting from {}'.format(self.local_path,))
@@ -51,19 +53,30 @@ class SlothChart:
         # Be warned: anything done in this func will have a big impact on processing speed TODO add this to docstring
 
     def get_contributions(self):
-        run('node {} {} {}'.format( self.scraper, self.user, self.data))  # call the scraper submod
-        with open(self.data) as source:
-            all_contributions = jsonload(source)
-            if len(all_contributions) < self.window:
-                self.window = len(all_contributions)  # Just in case contributions are fewer than 256
-
-            self.contributions.extend(all_contributions[-1:0-self.window-1:-1])  # Step backward from most recent
-            self.contributions.reverse()  # To return the list to its original order
-            print('.json file parsed...')
-            return self.contributions
+        response = requests.get(f'https://github.com/users/{self.user}/contributions')
+        page = BeautifulSoup(response.text, 'html.parser')
+        all_contributions = []
+        for i in page.find_all(attrs={'data-date': True}):
+            all_contributions.append((i['data-date'], int(i['data-count'])))
+        if len(all_contributions) < self.window:
+            self.window = len(all_contributions)  # Just in case contributions are fewer than 256
+        self.contributions.extend(all_contributions[-1:0-self.window-1:-1])  # Step backward from most recent
+        self.contributions.reverse()  # To return the list to its original order
+        return self.contributions
 
     def get_image(self):
-        self.image1 = Image.open(path.join(self.image_dir, 'image1.jpg'))  # TODO make this file-type agnostic
+        if os_name == 'nt':
+            # in windows, new lock-screen backgrounds are auto-downloaded.
+            # this should fetch all of the ones in landscape orientation and put them in the project folder
+            # TODO find a way to access this windows location without hard-coding the address
+            windows_lockscreen_dir = f"C:\\Users\\{self.osUser}\\AppData\\Local\\Packages\\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\\LocalState\\Assets"
+            for file in listdir(windows_lockscreen_dir):
+                file = Image.open(path.join(windows_lockscreen_dir,file))
+                if file.size[0] > file.size[1] and file.size[1] >= self.minimum_resolution:
+                    file.save(path.join(self.image_dir, f'{len(listdir(self.image_dir))}.jpeg'), 'JPEG')
+
+        self.image1 = Image.open(path.join(self.image_dir, choice(listdir(self.image_dir))))
+        # Pick a random image from favorites and open it
         return self.image1
 
     def bar_chart_overlay(self):
@@ -116,11 +129,11 @@ class SlothChart:
         self.get_contributions()
 
         step_width = width // self.window
-        rolling_avg = [self.contributions[0]['count']] * self.average_window
+        rolling_avg = [self.contributions[0][1]] * self.average_window
         xy_list = [[0,int(height * (sum(rolling_avg) / len(rolling_avg)) / self.goal)]]
         pixel_position = 0
         for day in range(self.window):
-            today_count = self.contributions[day]['count']
+            today_count = self.contributions[day][1]
             rolling_avg.append(today_count)
             rolling_avg.pop(0)
             if day < width % self.window:
@@ -159,6 +172,6 @@ class SlothChart:
 
 
 if __name__ == "__main__":
-    background_chart = SlothChart('lord_vorian', 256, 4, 30)
+    background_chart = SlothChart('Lord-Vorian', 256, 4, 30)
     background_chart.line_chart_overlay()
 

@@ -54,10 +54,14 @@ class SlothChart:
 
     def get_contributions(self):
         response = requests.get(f'https://github.com/users/{self.user}/contributions')
+        # requests sets a GET for the specified url, returns the raw HTML
         page = BeautifulSoup(response.text, 'html.parser')
+        # BeautifulSoup takes the HTML and parses it for easy searching
         all_contributions = []
         for i in page.find_all(attrs={'data-date': True}):
+            # use B.S. search method 'find-all' which returns a list of elements with the specified attribute
             all_contributions.append((i['data-date'], int(i['data-count'])))
+            # from each element, add the date attribute and the number of contributions attribute as a tuple
         if len(all_contributions) < self.window:
             self.window = len(all_contributions)  # Just in case contributions are fewer than 256
         self.contributions.extend(all_contributions[-1:0-self.window-1:-1])  # Step backward from most recent
@@ -70,10 +74,14 @@ class SlothChart:
             # this should fetch all of the ones in landscape orientation and put them in the project folder
             # TODO find a way to access this windows location without hard-coding the address
             windows_lockscreen_dir = f"C:\\Users\\{self.osUser}\\AppData\\Local\\Packages\\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\\LocalState\\Assets"
-            for file in listdir(windows_lockscreen_dir):
-                file = Image.open(path.join(windows_lockscreen_dir,file))
-                if file.size[0] > file.size[1] and file.size[1] >= self.minimum_resolution:
-                    file.save(path.join(self.image_dir, f'{len(listdir(self.image_dir))}.jpeg'), 'JPEG')
+            with open('collected_images.txt','a+') as history:
+                history.seek(0,0)
+                # places cursor at begining of file so it may be read
+                for file in listdir(windows_lockscreen_dir):
+                    file = Image.open(path.join(windows_lockscreen_dir,file))
+                    if file.size[0] > file.size[1] and file.size[1] >= self.minimum_resolution and file.filename not in history.read():
+                        history.write("\n" + file.filename)
+                        file.save(path.join(self.image_dir, file.filename[-5:]+'.jpeg'), 'JPEG')
 
         self.image1 = Image.open(path.join(self.image_dir, choice(listdir(self.image_dir))))
         # Pick a random image from favorites and open it

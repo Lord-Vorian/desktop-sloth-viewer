@@ -1,0 +1,4 @@
+
+C:\Users\Vorian\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets\7d1d2efe1055ef8240a81ed807f8fb45736b6521873a4134193927bda1845011
+C:\Users\Vorian\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets\a74205a6b569a90802f7330b9fb177a0b5464151a93ba55374384b6fce8a9315
+C:\Users\Vorian\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets\e578d7faef89840d10afca0bb2472f3cd3d8377c85c8c5843b4f0456e2d0154d
